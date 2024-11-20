@@ -8,16 +8,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $user = validateLogin($email, $password);
-
-    if ($user) {
-        // Successful login
-        $_SESSION['user'] = $user; // Store user data in session
-        header('Location: admin/dashboard.php'); // Redirect to dashboard
-        exit();
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = 'Invalid email.';
     } else {
-        // Invalid credentials
-        $message = 'Invalid email or password.';
+        $user = validateLogin($email, $password);
+
+        if ($user) {
+            // Successful login
+            $_SESSION['user'] = $user; // Store user data in session
+            header('Location: admin/dashboard.php'); // Redirect to dashboard
+            exit();
+        } else {
+            // Invalid credentials
+            $message = 'Invalid email or password.';
+        }
     }
 }
 ?>
