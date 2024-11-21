@@ -36,4 +36,18 @@ function validateLogin($email, $password) {
         return false;
     }
 }
+
+// Check for duplicate student IDs
+function isStudentIDExists($student_id) {
+    $conn = connectDatabase();
+    $stmt = $conn->prepare("SELECT * FROM students WHERE student_id = ?");
+    $stmt->bind_param("s", $student_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $conn->close();
+
+    return $result->num_rows > 0;
+}
+ 
 ?>
