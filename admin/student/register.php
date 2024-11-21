@@ -94,6 +94,7 @@ $students = getStudents();
                         <th>Student ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Option</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,12 +105,18 @@ $students = getStudents();
                                 <td><?php echo htmlspecialchars($student['first_name']); ?></td>
                                 <td><?php echo htmlspecialchars($student['last_name']); ?></td>
 
-                            
+                                <td>
+                                <!-- Option buttons: Edit, Delete, Attach Subject -->
+                                <a href="edit.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-info btn-sm">Edit</a>
+                                <a href="delete.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="attach-subject.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-warning btn-sm">Attach Subject</a>
+                                </td>
+
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="3">No students registered yet.</td>
+                            <td colspan="4">No students registered yet.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
