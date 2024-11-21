@@ -92,4 +92,51 @@ function getStudents() {
     return $students;
 }
 
+function isSubjectExists($subject_code, $subject_name) {
+    $conn = connectDatabase();
+    $stmt = $conn->prepare("SELECT * FROM subjects WHERE subject_code = ? OR subject_name = ?");
+    $stmt->bind_param("ss", $subject_code, $subject_name);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $conn->close();
+
+    return $result->num_rows > 0;
+}
+
+function addSubject($subject_code, $subject_name) {
+    $conn = connectDatabase();
+
+    // Prepare insert statement
+    $stmt = $conn->prepare("INSERT INTO subjects (subject_code, subject_name) VALUES (?, ?)");
+    $stmt->bind_param("ss", $subject_code, $subject_name);
+
+    // Execute and check if successful
+    if ($stmt->execute()) {
+        $stmt->close();
+        $conn->close();
+        return true;
+    } else {
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
+}
+
+function getSubjects() {
+    $conn = connectDatabase();
+    $sql = "SELECT * FROM subjects";
+    $result = $conn->query($sql);
+
+    // Fetch all rows as associative array
+    $subjects = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $subjects[] = $row;
+        }
+    }
+    $conn->close();
+    return $subjects;
+}
+
 ?>
