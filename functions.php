@@ -22,18 +22,18 @@ function connectDatabase() {
 function validateLogin($email, $password) {
     $conn = connectDatabase();
 
-    // Sanitize input
+    // Sanitize input to prevent SQL injection
     $email = $conn->real_escape_string($email);
-    $password = md5($password); // Hash password to match database
+    $password = md5($password); // Hash password with md5()
 
     // Query for user
     $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        return $result->fetch_assoc(); // Return user details
+        return $result->fetch_assoc(); // Return user details if login is successful
     } else {
-        return false;
+        return false; // Return false if login fails
     }
 }
 
@@ -49,5 +49,30 @@ function isStudentIDExists($student_id) {
 
     return $result->num_rows > 0;
 }
- 
+
+// Register a new student
+function registerStudent($student_id, $first_name, $last_name) {
+    $conn = connectDatabase();
+
+    // Sanitize inputs
+    $student_id = $conn->real_escape_string($student_id);
+    $first_name = $conn->real_escape_string($first_name);
+    $last_name = $conn->real_escape_string($last_name);
+
+    // Prepare insert statement
+    $stmt = $conn->prepare("INSERT INTO students (student_id, first_name, last_name) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $student_id, $first_name, $last_name);
+
+    // Execute the statement and check if successful
+    if ($stmt->execute()) {
+        $stmt->close();
+        $conn->close();
+        return true;
+    } else {
+        $stmt->close();
+        $conn->close();
+        return false;
+    }
+}
+
 ?>
