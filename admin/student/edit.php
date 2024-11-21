@@ -61,11 +61,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'])) {
 <!-- Main Content Section -->
 <div class="container-fluid">
     <div class="row">
-            <!-- Include the sidebar -->
-            <?php include '../partials/side-bar.php'; ?>
+        <!-- Include the sidebar -->
+        <?php include '../partials/side-bar.php'; ?>
+        
         <!-- Main Form Column -->
         <div class="col-md-9 col-lg-10 mt-5">
             <h2>Edit Student</h2>
+
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="../dashboard.php">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="register.php">Register Student</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Student</li>
+                </ol>
+                </nav>
             <br>
 
             <!-- Error Messages -->
