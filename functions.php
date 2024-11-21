@@ -138,5 +138,38 @@ function getSubjects() {
     $conn->close();
     return $subjects;
 }
+    // Function to fetch a subject by its code (for editing)
+function getSubjectByCode($subject_code) {
+    $conn = connectDatabase();
+
+    // Prepare statement to fetch the subject details
+    $stmt = $conn->prepare("SELECT * FROM subjects WHERE subject_code = ?");
+    $stmt->bind_param("s", $subject_code);  // Bind subject_code parameter
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    $conn->close();
+
+    // Return the subject details if found
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    } else {
+        return null; // Return null if no subject found
+    }
+}
+
+// Function to update the subject in the database
+function updateSubject($subject_code, $subject_name) {
+    $conn = connectDatabase();
+
+    // Prepare the update query
+    $stmt = $conn->prepare("UPDATE subjects SET subject_name = ? WHERE subject_code = ?");
+    $stmt->bind_param("ss", $subject_name, $subject_code); // Bind parameters
+    $success = $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+    return $success;  // Return whether the update was successful or not
+}
 
 ?>
