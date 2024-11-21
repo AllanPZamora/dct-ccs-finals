@@ -75,4 +75,21 @@ function registerStudent($student_id, $first_name, $last_name) {
     }
 }
 
+// Fetch all students
+function getStudents() {
+    $conn = connectDatabase();
+    $sql = "SELECT * FROM students";
+    $result = $conn->query($sql);
+
+    // Fetch all rows as associative array
+    $students = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $students[] = $row;
+        }
+    }
+    $conn->close();
+    return $students;
+}
+
 ?>
