@@ -3,12 +3,43 @@ session_start();
 $pageTitle = "Register Student";
 include '../partials/header.php';
 include '../../functions.php';
+
+// Initialize errors array
+$errors = [];
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $student_id = $_POST['student_id'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
+
+    // Validate fields (check if any field is empty)
+    if (empty($student_id) || empty($first_name) || empty($last_name)) {
+        $errors[] = 'All fields are required!';
+    }
+
+    // Check if student ID already exists
+    if (isStudentIDExists($student_id)) {
+        $errors[] = 'Student ID already exists. Please use a different one.';
+    }
+
+    // If no errors, insert the new student into the database
+    if (empty($errors)) {
+        if (registerStudent($student_id, $first_name, $last_name)) {
+            $_SESSION['success'] = 'Student registered successfully!';
+            header("Location: register.php"); // Redirect to avoid re-submission on page refresh
+            exit;
+        } else {
+            $errors[] = 'Failed to register student. Please try again.';
+        }
+    }
+}
 ?>
 
 <div class="container-fluid">
     <div class="row">
         <!-- Sidebar Section -->
-            <?php include '../partials/side-bar.php'; ?>
+        <?php include '../partials/side-bar.php'; ?>
         <!-- Main Content Section -->
         <div class="col-md-9 col-lg-10 mt-5">
             <h2>Register a New Student</h2>
