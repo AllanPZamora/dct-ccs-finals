@@ -27,13 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         if (registerStudent($student_id, $first_name, $last_name)) {
             $_SESSION['success'] = 'Student registered successfully!';
-            header("Location: register.php"); // Redirect to avoid re-submission on page refresh
+            // Redirect to refresh the page and show the updated student list
+            header("Location: register.php");
             exit;
         } else {
             $errors[] = 'Failed to register student. Please try again.';
         }
     }
 }
+
+// Fetch all students to display in the table
+$students = getStudents();
+
 ?>
 
 <div class="container-fluid">
@@ -89,8 +94,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <th>Student ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Option</th>
                     </tr>
                 </thead>
+                <tbody>
+                    <?php if (!empty($students)): ?>
+                        <?php foreach ($students as $student): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($student['student_id']); ?></td>
+                                <td><?php echo htmlspecialchars($student['first_name']); ?></td>
+                                <td><?php echo htmlspecialchars($student['last_name']); ?></td>
+
+                                <td>
+                                <!-- Option buttons: Edit, Delete, Attach Subject -->
+                                <a href="edit.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-info btn-sm">Edit</a>
+                                <a href="delete.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-danger btn-sm">Delete</a>
+                                <a href="attach-subject.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-warning btn-sm">Attach Subject</a>
+                                </td>
+
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="4">No students registered yet.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
             </table>
         </div>
     </div>
